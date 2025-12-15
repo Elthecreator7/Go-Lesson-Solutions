@@ -1,0 +1,631 @@
+Go Lesson CHAPTER 3
+Lesson 1: Functions
+Functions in Go can take zero or more arguments.
+
+To make code easier to read, the variable type comes after the variable name.
+
+For example, the following function:
+
+func sub(x int, y int) int {
+    return x-y
+}
+
+Accepts two integer parameters and returns another integer.
+
+Here, func sub(x int, y int) int is known as the "function signature".
+
+Assignment
+We often will need to manipulate strings in our messaging app. For example, adding some personalization by using a customer's name within a template. The concat function should take two strings and smash them together.
+
+hello + world = helloworld
+Fix the function signature of concat to reflect its behavior.
+
+
+ASSIGNMENT SOLUTION:
+package main
+
+import "fmt"
+
+func concat(s1 string, s2 string) string {
+	return s1 + s2
+}
+
+// don't touch below this line
+
+func main() {
+	test("Lane,", " happy birthday!")
+	test("Zuck,", " hope that Metaverse thing works out")
+	test("Go", " is fantastic")
+}
+
+
+
+Lesson 2:
+Multiple Parameters
+When multiple arguments are of the same type, and are next to each other in the function signature, the type only needs to be declared after the last argument.
+
+Here are some examples:
+
+func addToDatabase(hp, damage int) {
+  // ...
+}
+
+func addToDatabase(hp, damage int, name string) {
+  // ?
+}
+
+func addToDatabase(hp, damage int, name string, level int) {
+  // ?
+}
+
+Lesson 3:
+Unit Test Lessons
+Up until now, all the coding lessons in this course have been testing you based on your code's console output (what's printed). For example, a lesson might expect your code (in conjunction with the code we provide) to print something like:
+
+Price: 0.2
+NumMessages: 18
+
+If your code prints that exact output, you pass. If it doesn't, you fail.
+
+A New Type of Lesson
+Going forward, you'll also encounter a new type of lesson: unit tests. If you've taken a course with us before, you'll know what we are referring to. But in case you haven't, a unit test is just an automated program that tests a small "unit" of code. Usually just a function or two. The editor will have tabs: the "main.go" file containing your code, and the "main_test.go" file containing the unit tests.
+
+These new unit-test-style lessons will test your code's functionality rather than its output. Our tests will call functions in your code with different arguments, and expect specific return values. If your code returns the correct values, you pass. If it doesn't, you fail.
+
+There are two reasons for this change:
+
+It's more realistic. In the real world, you'll be writing unit tests and running them against your code to make sure it works as expected.
+You can run and debug your code with fmt.Println statements, and leave those print statements in when you submit. Unlike the output-based lessons, you won't have to remove your fmt.Println statements to pass.
+Assignment
+Complete the getMonthlyPrice function. It accepts a tier (string) as input and returns the monthly price for that tier in pennies. Here are the prices in dollars:
+
+"basic" - $100.00
+"premium" - $150.00
+"enterprise" - $500.00
+Convert the prices from dollars to pennies. If the given tier doesn't match any of the above, return 0 pennies.
+
+To avoid pesky floating-point errors, we often store prices in the currency's base unit. In this case, we are storing the prices in pennies, and a dollar consists of 100 pennies.
+
+
+Lesson 4:
+Declaration Syntax
+Developers often wonder why the declaration syntax in Go is different from the tradition established in the C family of languages.
+
+C-Style Syntax
+The C language describes types with an expression including the name to be declared, and states what type that expression will have.
+
+int y;
+
+The code above declares y as an int. In general, the type goes on the left and the expression on the right.
+
+Interestingly, the creators of the Go language agreed that the C-style of declaring types in signatures gets confusing really fast - take a look at this nightmare.
+
+int (*fp)(int (*ff)(int x, int y), int b)
+
+Go-Style Syntax
+Go's declarations are clear, you just read them left to right, just like you would in English.
+
+x int
+p *int
+a [3]int
+
+It's nice for more complex signatures, it makes them easier to read.
+
+f func(func(int,int) int, int) int
+
+Reference
+The following post on the Go blog is a great resource for further reading on declaration syntax.
+
+
+Lesson 5:
+Passing Variables by Value
+Variables in Go are passed by value (except for a few data types we haven't covered yet). "Pass by value" means that when a variable is passed into a function, that function receives a copy of the variable. The function is unable to mutate the caller's original data.
+
+func main() {
+    x := 5
+    increment(x)
+
+    fmt.Println(x)
+    // still prints 5,
+    // because the increment function
+    // received a copy of x
+}
+
+func increment(x int) {
+    x++
+}
+
+Assignment
+Fix the bugs in the monthlyBillIncrease and getBillForMonth functions.
+
+monthlyBillIncrease: Returns the increase in the bill from the previous to the current month. If the bill decreased, it should return a negative number.
+getBillForMonth: Returns the bill for the given month.
+It looks like whoever wrote the getBillForMonth function thought that they could pass in the bill parameter, update it inside the function, and that update would apply in the parent function (monthlyBillIncrease). They were wrong.
+
+Change the getBillForMonth function to explicitly return the bill for the given month, and be sure to capture that return value properly in the monthlyBillIncrease function.
+
+The function signature for getBillForMonth should only take 2 parameters once you're done.
+
+
+
+Lesson 6:
+Ignoring Return Values
+A function can return a value that the caller doesn't care about. We can explicitly ignore variables by using an underscore, or more precisely, the blank identifier _.
+
+For example:
+
+func getPoint() (x int, y int) {
+    return 3, 4
+}
+
+// ignore y value
+x, _ := getPoint()
+
+Even though getPoint() returns two values, we can capture the first one and ignore the second. In Go, the blank identifier isn't just a convention; it's a real language feature that completely discards the value.
+
+Why Might You Ignore a Return Value?
+Maybe a function called getCircle returns the center point and the radius, but you only need the radius for your calculation. In that case, you can ignore the center point variable.
+
+The Go compiler will throw an error if you have any unused variable declarations in your code, so you need to ignore anything you don't intend to use.
+
+Assignment
+Run the code as-is. You should get a compiler error.
+Fix the getProductMessage to ignore the unused return value.
+
+
+
+Lesson 7:
+Named Return Values
+Return values may be given names, and if they are, then they are treated the same as if they were new variables defined at the top of the function.
+
+Named return values are best thought of as a way to document the purpose of the returned values.
+
+According to the tour of go:
+
+A return statement without arguments returns the named return values. This is known as a "naked" return. Naked return statements should be used only in short functions. They can harm readability in longer functions.
+
+Use naked returns if it's obvious what the purpose of the returned values is. Otherwise, use named returns for clarity.
+
+func getCoords() (x, y int) {
+	// x and y are initialized with zero values
+
+
+
+
+Lesson 8:
+The Benefits of Named Returns
+Good for Documentation (Understanding)
+Named return parameters are great for documenting a function. We know what the function is returning directly from its signature, no need for a comment.
+
+Named return parameters are particularly important in longer functions with many return values.
+
+func calculator(a, b int) (mul, div int, err error) {
+    if b == 0 {
+      return 0, 0, errors.New("can't divide by zero")
+    }
+    mul = a * b
+    div = a / b
+    return mul, div, nil
+}
+
+Which is easier to understand than:
+
+func calculator(a, b int) (int, int, error) {
+    if b == 0 {
+      return 0, 0, errors.New("can't divide by zero")
+    }
+    mul := a * b
+    div := a / b
+    return mul, div, nil
+}
+
+We know the meaning of each return value just by looking at the function signature: func calculator(a, b int) (mul, div int, err error)
+
+nil is the zero value of an error. More on this later.
+
+Less Code (Sometimes)
+If there are multiple return statements in a function, you don't need to write all the return values each time, though you probably should.
+
+When you choose to omit return values, it's called a naked return. Naked returns should only be used in short and simple functions.
+
+	return // automatically returns x and y
+}
+
+
+Is the same as:
+
+func getCoords() (int, int) {
+	var x int
+	var y int
+	return x, y
+}
+
+In the first example, x and y are the return values. At the end of the function, we could simply write return to return the values of those two variables, rather than writing return x,y.
+
+Assignment
+One of our clients likes us to send text messages reminding users of life events coming up.
+
+Fix the bug by using named return values in the function signature. The variables need to be automatically initialized. Order them as they appear in the code. Do not alter the body of the function.
+
+
+Lesson 9:
+Explicit Returns
+Even though a function has named return values, we can still explicitly return values if we want to.
+
+func getCoords() (x, y int) {
+	return x, y // this is explicit
+}
+
+Using this explicit pattern we can even overwrite the return values:
+
+func getCoords() (x, y int) {
+    return 5, 6 // this is explicit, x and y are NOT returned
+}
+
+Otherwise, if we want to return the values defined in the function signature we can just use a naked return (blank return):
+
+func getCoords() (x, y int) {
+    return // implicitly returns x and y
+}
+
+Assignment
+Fix the bug in the code so that it returns the named values explicitly.
+
+
+
+
+
+
+
+Lesson 10:
+Early Returns
+Go supports the ability to return early from a function. This is a powerful feature that can clean up code, especially when used as guard clauses.
+
+Guard Clauses leverage the ability to return early from a function (or continue through a loop) to make nested conditionals one-dimensional. Instead of using if/else chains, we just return early from the function at the end of each conditional block.
+
+func divide(dividend, divisor int) (int, error) {
+	if divisor == 0 {
+		return 0, errors.New("can't divide by zero")
+	}
+	return dividend/divisor, nil
+}
+
+Error handling in Go naturally encourages developers to make use of guard clauses. When I started writing more JavaScript, I was disappointed to see how many nested conditionals existed in the code I was working on.
+
+Let’s take a look at an exaggerated example of nested conditional logic:
+
+func getInsuranceAmount(status insuranceStatus) int {
+  amount := 0
+  if !status.hasInsurance(){
+    amount = 1
+  } else {
+    if status.isTotaled(){
+      amount = 10000
+    } else {
+      if status.isDented(){
+        amount = 160
+        if status.isBigDent(){
+          amount = 270
+        }
+      } else {
+        amount = 0
+      }
+    }
+  }
+  return amount
+}
+
+This could be written with guard clauses instead:
+
+func getInsuranceAmount(status insuranceStatus) int {
+  if !status.hasInsurance(){
+    return 1
+  }
+  if status.isTotaled(){
+    return 10000
+  }
+  if !status.isDented(){
+    return 0
+  }
+  if status.isBigDent(){
+    return 270
+  }
+  return 160
+}
+
+The example above is much easier to read and understand. When writing code, it’s important to try to reduce the cognitive load on the reader by reducing the number of entities they need to think about at any given time.
+
+In the first example, if the developer is trying to figure out when 270 is returned, they need to think about each branch in the logic tree and try to remember which cases matter and which cases don't. With the one-dimensional structure offered by guard clauses, it’s as simple as stepping through each case in order.
+
+
+
+
+Lesson 11:
+Functions As Values
+Go supports first-class and higher-order functions, which are just fancy ways of saying "functions as values". Functions are just another type -- like ints and strings and bools.
+
+Let's assume we have two simple functions:
+
+func add(x, y int) int {
+	return x + y
+}
+
+func mul(x, y int) int {
+	return x * y
+}
+
+We can create a new aggregate function that accepts a function as its 4th argument:
+
+func aggregate(a, b, c int, arithmetic func(int, int) int) int {
+  firstResult := arithmetic(a, b)
+  secondResult := arithmetic(firstResult, c)
+  return secondResult
+}
+
+It calls the given arithmetic function (which could be add or mul, or any other function that accepts two ints and returns an int) and applies it to three inputs instead of two. It can be used like this:
+
+func main() {
+	sum := aggregate(2, 3, 4, add)
+	// sum is 9
+	product := aggregate(2, 3, 4, mul)
+	// product is 24
+}
+
+Assignment
+Complete the reformat function. It takes a message string and a formatter function as input:
+
+Apply the given formatter three times to the message
+Add a prefix of TEXTIO: to the result
+Return the final string
+For example, if the message is "General Kenobi" and the formatter adds a period to the end of the string, the final result should be
+
+TEXTIO: General Kenobi...
+
+
+Lesson 12:
+Anonymous Functions
+Anonymous functions are true to form in that they have no name. They're useful when defining a function that will only be used once or to create a quick closure.
+
+Let's say we have a function conversions that accepts another function, converter as input:
+
+func conversions(converter func(int) int, x, y, z int) (int, int, int) {
+	convertedX := converter(x)
+	convertedY := converter(y)
+	convertedZ := converter(z)
+	return convertedX, convertedY, convertedZ
+}
+
+We could define a function normally and then pass it in by name... but it's usually easier to just define it anonymously:
+
+func double(a int) int {
+    return a + a
+}
+
+func main() {
+    // using a named function
+	newX, newY, newZ := conversions(double, 1, 2, 3)
+	// newX is 2, newY is 4, newZ is 6
+
+    // using an anonymous function
+	newX, newY, newZ = conversions(func(a int) int {
+	    return a + a
+	}, 1, 2, 3)
+	// newX is 2, newY is 4, newZ is 6
+}
+
+Assignment
+Complete the printReports function. It takes as input a sequence of messages, intro, body, outro. It should call printCostReport once for each message.
+
+For each call of printCostReport, give it an anonymous function that returns the cost of a message as an integer. Here are the costs:
+
+Intro: 2x the message length
+Body: 3x the message length
+Outro: 4x the message length
+Use the built-in len() function to get the length of a string:
+
+helloLen := len("hello")
+// helloLen = 5
+
+
+
+
+Lesson 13:
+Defer
+The defer keyword is a fairly unique feature of Go. It allows a function to be executed automatically just before its enclosing function returns. The deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
+
+Deferred functions are typically used to clean up resources that are no longer being used. Often to close database connections, file handlers and the like.
+
+For example:
+
+func GetUsername(dstName, srcName string) (username string, err error) {
+	// Open a connection to a database
+	conn, _ := db.Open(srcName)
+
+	// Close the connection *anywhere* the GetUsername function returns
+	defer conn.Close()
+
+	username, err = db.FetchUser()
+	if err != nil {
+		// The defer statement is auto-executed if we return here
+		return "", err
+	}
+
+	// The defer statement is auto-executed if we return here
+	return username, nil
+}
+
+In the above example, the conn.Close() function is not called here:
+
+defer conn.Close()
+
+It's called:
+
+// here
+return "", err
+// or here
+return username, nil
+
+Depending on whether the FetchUser function errored. (We'll cover errors later).
+
+Defer is a great way to make sure that something happens before a function exits, even if there are multiple return statements, a common occurrence in Go.
+
+Assignment
+Complete the bootup function.
+
+Be sure to print the following string just before the bootup function returns:
+TEXTIO BOOTUP DONE
+
+Use defer so that you only have to write this message once instead of before each return statement. The message should be printed on its own newline.
+
+
+
+Lesson 14:
+Block Scope
+Unlike Python, Go is not function-scoped, it's block-scoped. Variables declared inside a block are only accessible within that block (and its nested blocks). There's also the package scope. We'll talk about packages later, but for now, you can think of it as the outermost, nearly global scope.
+
+package main
+
+// scoped to the entire "main" package (basically global)
+var age = 19
+
+func sendEmail() {
+    // scoped to the "sendEmail" function
+    name := "Jon Snow"
+
+    for i := 0; i < 5; i++ {
+        // scoped to the "for" body
+        email := "snow@winterfell.net"
+    }
+}
+
+Blocks are defined by curly braces {}. New blocks are created for:
+
+Functions
+Loops
+If statements
+Switch statements
+Select statements
+Explicit blocks
+It's a bit unusual, but occasionally you'll see a plain old explicit block. It exists for no other reason than to create a new scope.
+
+package main
+
+import fmt
+
+func main() {
+    {
+        age := 19
+        // this is okay
+        fmt.Println(age)
+    }
+
+    // this is not okay
+    // the age variable is out of scope
+    fmt.Println(age)
+}
+
+Assignment
+Run the code without changing anything: you should see a compilation error.
+Fix the scoping issue in the function so that it runs as you'd expect.
+
+
+
+Lesson 15:
+Processing Orders
+Management thinks our branding is so creative that our SaaS customers will pay for Textio merch.
+
+Assignment
+Complete the placeOrder function.
+
+It returns a bool indicating whether the order was successful (true is a success) and a float64 representing the user's balance after the order. The placeOrder function should always return the account balance regardless of if it was adjusted or not.
+
+The amountInStock and calcPrice functions can be used to look up the current stock and price of an item.
+
+If the quantity is greater than the amount in stock, the order should be rejected.
+If the user doesn't have enough money in their account, the order should be rejected.
+Otherwise, the order should be accepted and you should return the new balance.
+
+
+
+
+
+
+Lesson 16:
+Closures
+A closure is a function that references variables from outside its own function body. The function may access and assign to the referenced variables.
+
+In this example, the concatter() function returns a function that has reference to an enclosed doc value. Each successive call to harryPotterAggregator mutates that same doc variable.
+
+func concatter() func(string) string {
+	doc := ""
+	return func(word string) string {
+		doc += word + " "
+		return doc
+	}
+}
+
+func main() {
+	harryPotterAggregator := concatter()
+	harryPotterAggregator("Mr.")
+	harryPotterAggregator("and")
+	harryPotterAggregator("Mrs.")
+	harryPotterAggregator("Dursley")
+	harryPotterAggregator("of")
+	harryPotterAggregator("number")
+	harryPotterAggregator("four,")
+	harryPotterAggregator("Privet")
+
+	fmt.Println(harryPotterAggregator("Drive"))
+	// Mr. and Mrs. Dursley of number four, Privet Drive
+}
+
+Assignment
+Keeping track of how many texts we send is mission-critical at Textio. Complete the adder() enclosing function.
+
+Create an enclosed sum value inside the adder() function.
+Return a function from the adder() function that adds its input (an int) to the sum and returns the new value of sum. (In other words, it keeps a running total of the sum variable within a closure.)
+
+
+Lesson 17:
+Currying
+Function currying is a concept from functional programming and involves partial application of functions. It allows a function with multiple arguments to be transformed into a sequence of functions, each taking a single argument.
+
+Let's simulate this behavior. For example:
+
+func main() {
+  squareFunc := selfMath(multiply)
+  doubleFunc := selfMath(add)
+
+  fmt.Println(squareFunc(5))
+  // prints 25
+
+  fmt.Println(doubleFunc(5))
+  // prints 10
+}
+
+func multiply(x, y int) int {
+  return x * y
+}
+
+func add(x, y int) int {
+  return x + y
+}
+
+func selfMath(mathFunc func(int, int) int) func (int) int {
+  return func(x int) int {
+    return mathFunc(x, x)
+  }
+}
+
+In the example above, the selfMath function takes in a function as its parameter and returns a function that itself returns the value of running that input function on its parameter.
+
+Assignment
+The Textio API needs a very robust error-logging system so we can see when things are going awry in the back-end system. We need a function that can create a custom "logger" (a function that prints to the console) given a specific formatter.
+
+Complete the getLogger function. It should take as input a formatter function and return a new function. The new logger function takes as input two strings and passes them to the formatter, then prints the result. Keep the order of the strings.
+
+
+
+
+
+

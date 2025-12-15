@@ -1,0 +1,435 @@
+GO LESSON NOTE
+CHAPTER 1
+Lesson 1: Basic Variables
+bool: a boolean value, either true or false
+string: a sequence of characters
+int: a signed integer
+float64: a floating-point number
+byte: exactly what it sounds like: 8 bits of data
+Declaring a Variable the Sad Way
+var mySkillIssues int
+mySkillIssues = 42
+
+The first line, var mySkillIssues int, defaults the mySkillIssues variable to its zero value, 0. On the next line, 42 overwrites the zero value.
+
+We'll talk about a better way to declare variables in the next lesson.
+
+Assignment
+Initialize the variables from the print statement to int, float64, bool and string with their zero values, respectively.
+
+
+Lesson 2: Short Variable Declaration
+Sad variable declaration:
+
+var mySkillIssues int
+mySkillIssues = 42
+
+GOATed variable declaration:
+
+mySkillIssues := 42
+
+The walrus operator, :=, declares a new variable and assigns a value to it in one line. Go can infer that mySkillIssues is an int because of the 42 value. Yay type inference!
+
+When to Use the Walrus Operator
+The :=, (walrus operator) should be used instead of var style declarations basically anywhere possible. The limitation is that := can't be used outside of a function (in the global/package scope which we'll talk about later).
+
+Type inference is based on the value being assigned.
+
+An int:
+
+mySkillIssues := 42
+
+A float64:
+
+pi := 3.14159
+
+A string:
+
+message := "Hello, world!"
+
+A bool:
+
+isGoat := true
+
+Assignment
+A common use case for Textio is to send birthday messages.
+
+Complete the main function. It should print: "Happy birthday! You are now 21 years old!".
+Create a string variable messageStart with the text "Happy birthday! You are now"
+Create an integer variable age set to 21
+Create another string variable messageEnd with the text "years old!"
+The provided fmt.Println statement will print the full message on a single line separated by spaces.
+
+
+
+
+Lesson 3: Why Go?
+Go is my favorite programming language by a good margin.
+
+
+
+We'll talk more about the benefits of Go later.
+
+But for now, let's whet your appetite with some more code.
+
+Assignment
+Critical bug!
+
+Textio users reported that we're billing them for wildly inaccurate amounts. They're supposed to be billed .02 dollars (2 cents) for each text message sent.
+
+Without changing any of the other lines, fix the math bug on line 8.
+
+
+
+Lesson 4: Comments
+Go has two styles of comments:
+
+// This is a single line comment
+
+/*
+  This is a multi-line comment
+  neither of these comments will execute
+  as code
+*/
+
+Assignment
+The new intern on the team screwed up their documentation comment.
+
+Fix the issue.
+
+
+
+Lesson 5: The Compilation Process
+Computers need machine code, they don't understand English or even Go. We need to convert our high-level (Go) code into machine language, which is really just a set of instructions that some specific hardware can understand. In your case, your CPU.
+
+The Go compiler's job is to take Go code and produce machine code, an .exe file on Windows or a standard executable on Mac/Linux.
+
+
+
+Go Program Structure
+We'll go over this all later in more detail, but to sate your curiosity:
+
+package main lets the Go compiler know that we want this code to compile and run as a standalone program, as opposed to being a library that's imported by other programs.
+import "fmt" imports the fmt (formatting) package from the standard library. It allows us to use fmt.Println to print to the console.
+func main() defines the main function, the entry point for a Go program.
+Two Kinds of Errors
+Generally speaking, there are two kinds of errors in programming:
+
+Compilation errors. Occur when code is compiled. It's generally better to have compilation errors because they'll never accidentally make it into production. You can't ship a program with a compiler error because the resulting executable won't even be created.
+Runtime errors. Occur when a program is running. These are generally worse because they can cause your program to crash or behave unexpectedly.
+While we're in the browser it can be a bit hard to tell the difference because we run and compile the code in the same step.
+
+Assignment
+Run the code. Notice the compilation error? It's due to invalid syntax.
+Fix the compilation error in the code.
+
+
+
+Lesson 6: Fast and Compiled
+Generally speaking, languages that compile directly to machine code produce programs that are faster than interpreted programs.
+
+Go is one of the fastest programming languages, beating JavaScript, Python, and Ruby handily in most benchmarks.
+
+However, Go programs don't run quite as fast as its compiled Rust, Zig, and C counterparts. That said, it compiles much faster than they do, which makes the developer experience super productive. Unfortunately, there are no swordfights on Go teams...
+
+
+
+- comic by XKCD
+
+
+
+Lesson 7: Type Sizes
+Integers, uints, floats, and complex numbers all have type sizes.
+
+Signed Integers (No Decimal)
+int  int8  int16  int32  int64
+
+Unsigned Integers (Whole Numbers/No Decimal)
+"uint" stands for "unsigned integer".
+
+uint uint8 uint16 uint32 uint64 uintptr
+
+Signed Decimal Numbers
+float32 float64
+
+Complex Numbers (a Complex Number Has a Real and Imaginary Part)
+complex64 complex128
+
+What's the Deal With the Sizes?
+The size (8, 16, 32, 64, 128, etc) represents how many bits in memory will be used to store the variable. The "default" int and uint types refer to their respective 32 or 64-bit sizes depending on the environment of the user.
+
+The "standard" sizes that should be used unless you have a specific performance need (e.g. using less memory) are:
+
+int
+uint
+float64
+complex128
+Converting Between Types
+Some types can be easily converted like this:
+
+temperatureFloat := 88.26
+temperatureInt := int64(temperatureFloat)
+
+Casting a float to an integer in this way truncates the floating point portion.
+
+Assignment
+Our Textio customers want to know how long they have had accounts with us.
+
+On line 7, create an accountAgeInt variable and assign it the value of accountAgeFloat truncated to an integer.
+
+
+
+Lesson 8: Which Type Should I Use?
+With so many types for what is essentially just a number, developers coming from languages that only have one kind of Number type (like JavaScript) may find the choices daunting.
+
+Prefer “Default” Types
+A problem arises when we have a uint16, and the function we are trying to pass it into takes an int. We're forced to write code riddled with type conversions like:
+
+var myAge uint16 = 25
+myAgeInt := int(myAge)
+
+This style of code can be slow and annoying to read. When Go developers stray from the “default” type for any given type family, the code can get messy quickly. Unless you have a good performance related reason, you'll typically just want to use the "default" types:
+
+bool
+string
+int
+uint
+byte
+rune
+float64
+complex128
+When Should I Use a More Specific Type?
+When you're super concerned about performance and memory usage.
+
+That’s about it. The only reason to deviate from the defaults is to squeeze out every last bit of performance when you are writing an application that is resource-constrained. (Or, in the special case of uint64, you need an absurd range of unsigned integers).
+
+You can read more on this subject here if you'd like, but it's not required.
+
+
+Lesson 9: Go Is Statically Typed
+Go enforces static typing meaning variable types are known before the code runs. That means your editor and the compiler can display type errors before the code is ever run, making development easier and faster.
+
+Contrast this with most dynamically typed languages like JavaScript and Python... Dynamic typing often leads to subtle bugs that are hard to detect. The code must be run to catch syntax and type errors. (sometimes in production if you're unlucky 😨)
+
+Languages also have strong or weak typing, meaning stricter or weaker type checking rules.
+
+Concatenating Strings
+Two strings can be concatenated with the + operator. But the compiler will not allow you to concatenate a string variable with an int or a float64.
+
+Assignment
+Textio uses basic authentication to log users in.
+
+The code on the right has a type error. Change the type of password to a string (but use the same numeric value) so that it can be concatenated with the username variable.
+
+
+
+Lesson 10:Compiled vs. Interpreted
+You can run a compiled program without the original source code. You don't need the compiler anymore after it's done its job. That's how most video games are distributed! Players don't need to install the correct version of Go to run a PC game: they just download the executable game and run it.
+
+
+
+With interpreted languages like Python and Ruby, the code is interpreted at runtime by a separate program known as the "interpreter". Distributing code for users to run can be a pain because they need to have an interpreter installed, and they need access to the source code.
+
+Examples of Compiled Languages
+Go
+C
+C++
+Rust
+Examples of Interpreted Languages
+JavaScript (sometimes JIT-compiled, but a similar concept)
+Python
+Ruby
+Why Build Textio in a Compiled Language?
+One of the most convenient things about using a compiled language like Go for Textio is that when we deploy our server we don't need to include any runtime language dependencies like Node or a Python interpreter. We just add the pre-compiled binary to the server and start it up!
+
+
+
+Lesson 11: Same Line Declarations
+You can declare multiple variables on the same line:
+
+mileage, company := 80276, "Toyota"
+
+The above is the same as:
+
+mileage := 80276
+company := "Toyota"
+
+Assignment
+At the top of the main function, declare a float called averageOpenRate and string called displayMessage on the same line.
+
+Initialize them to values:
+
+.23
+is the average open rate of your messages
+before they're printed.
+
+
+
+
+Lesson 12: Small Memory Footprint
+Go programs are fairly lightweight. Each program includes a small amount of extra code that's included in the executable binary called the Go Runtime. One of the purposes of the Go runtime is to clean up unused memory at runtime. It includes a garbage collector that automatically frees up memory that's no longer in use.
+
+Comparison
+As a general rule, Java programs use more memory than comparable Go programs. There are several reasons for this, but one of them is that Java uses a virtual machine to interpret bytecode at runtime and typically allocates more on the heap.
+
+On the other hand, Rust and C programs use slightly less memory than Go programs because more control is given to the developer to optimize the memory usage of the program. The Go runtime just handles it for us automatically.
+
+Idle Memory Usage
+
+
+In the chart above, Dexter Darwich compares the memory usage of three very simple programs written in Java, Go, and Rust. As you can see, Go and Rust use very little memory when compared to Java.
+
+
+
+
+Lesson 13:
+Constants
+Constants are declared with the const keyword. They can't use the := short declaration syntax.
+
+const pi = 3.14159
+
+Constants can be primitive types like strings, integers, booleans and floats. They cannot be more complex types like slices, maps and structs, which are types we will explain later.
+
+As the name implies, the value of a constant can't be changed after it has been declared.
+
+Use Two Separate Constants
+Something weird is happening in this code.
+
+What should be happening is that we create 2 separate constants: premiumPlanName and basicPlanName. Right now it looks like we're trying to overwrite one of them.
+
+Assignment
+Complete the code to remove the bug and create the constant basicPlanName.
+
+
+Lesson 14:
+Computed Constants
+Constants must be known at compile time. They are usually declared with a static value:
+
+const myInt = 15
+
+However, constants can be computed as long as the computation can happen at compile time.
+
+For example, this is valid:
+
+const firstName = "Lane"
+const lastName = "Wagner"
+const fullName = firstName + " " + lastName
+
+That said, you cannot declare a constant that can only be computed at run-time like you can in JavaScript. This breaks:
+
+// the current time can only be known when the program is running
+const currentTime = time.Now()
+
+Assignment
+Keeping track of time in a message-sending application is critical. Imagine getting an appointment reminder an hour after your doctor's visit.
+
+Complete the code using a computed constant to print the number of seconds in an hour.
+
+
+
+Lesson 15:
+Comparing Go's Speed
+Go is generally faster and more lightweight than interpreted or VM-powered languages like:
+
+Python
+JavaScript
+PHP
+Ruby
+Java
+However, in terms of execution speed, Go does lag behind some other compiled languages like:
+
+C
+C++
+Rust
+Go is a bit slower mostly due to its automated memory management, also known as the "Go runtime". Slightly slower speed is the price we pay for memory safety and simple syntax!
+
+
+
+Textio is an amazing candidate for a Go project. We'll be able to quickly process large amounts of text all while using a language that is safe and simple to write.
+
+
+
+Lesson 16:
+Formatting Strings in Go
+Go follows the printf tradition from the C language. In my opinion, string formatting/interpolation in Go is less elegant than Python's f-strings, unfortunately.
+
+fmt.Printf() - Prints a formatted string to standard out.
+fmt.Sprintf() - Returns the formatted string
+These following "formatting verbs" work with the formatting functions above:
+
+Default Representation
+The %v variant prints any value in a default format. It can be used as a catchall.
+
+s := fmt.Sprintf("I am %v years old", 10)
+// I am 10 years old
+
+s := fmt.Sprintf("I am %v years old", "way too many")
+// I am way too many years old
+
+If you want to print in a more specific way, you can use the following formatting verbs:
+
+String
+s := fmt.Sprintf("I am %s years old", "way too many")
+// I am way too many years old
+
+Integer
+s := fmt.Sprintf("I am %d years old", 10)
+// I am 10 years old
+
+Float
+s := fmt.Sprintf("I am %f years old", 10.523)
+// I am 10.523000 years old
+
+// The ".2" rounds the number to 2 decimal places
+s := fmt.Sprintf("I am %.2f years old", 10.523)
+// I am 10.52 years old
+
+If you're interested in all the formatting options, you can look at the fmt package's docs.
+
+Assignment
+Create a new variable called msg on line 9 and use the appropriate formatting function to return a string that contains following:
+
+Hi NAME, your open rate is OPENRATE percentNEWLINE
+
+Replace NAME with the variable name,
+Replace OPENRATE with the variable openRate rounded to the nearest "tenths" place, e.g 10.523 should be rounded down to 10.5
+The word percent should appear as part of the string following the open rate value
+Replace NEWLINE with the newline \n escape sequence.
+For example, with the inputs "Jimmy McGill" and 2.5, the expected output would be:
+
+Hi Jimmy McGill, your open rate is 2.5 percent
+
+
+
+Lesson 17:
+Runes and String Encoding
+In many programming languages (cough, C, cough), a "character" is a single byte. Using ASCII encoding, the standard for the C programming language, we can represent 128 characters with 7 bits. This is enough for the English alphabet, numbers, and some special characters.
+
+In Go, strings are just sequences of bytes: they can hold arbitrary data. However, Go also has a special type, rune, which is an alias for int32. This means that a rune is a 32-bit integer, which is large enough to hold any Unicode code point.
+
+When you're working with strings, you need to be aware of the encoding (bytes -> representation). Go uses UTF-8 encoding, which is a variable-length encoding.
+
+What Does This Mean?
+There are 2 main takeaways:
+
+When you need to work with individual characters in a string, you should use the rune type. It breaks strings up into their individual characters, which can be more than one byte long.
+We can include a wide variety of Unicode characters in our strings, such as emojis and Chinese characters, and Go will handle them just fine.
+Assignment
+Boots is a bear. (Not a dog, haters).
+
+Run the code as-is. Notice that the simple string "boots" has 5 bytes, and 5 runes (characters).
+Update the name variable to be the bear emoji instead of the word "boots".
+🐻
+
+If you've got it right, you should notice that the emoji is only one rune, but it takes up 4 bytes.
+
+
+
+
+Tips
+fmt.Sprintf can be used to format strings.
+%.1f rounds a float to the tenths place, %.2f rounds to the hundredths place, etc.
+%t formats a boolean value.
+%v can be used to format any value in its default representation.
+%s can be used to format a string.
+%d can be used to format an integer.

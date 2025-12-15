@@ -1,0 +1,219 @@
+Go Lesson chapter 2
+Conditionals
+if statements in Go do not use parentheses around the condition:
+
+if height > 4 {
+    fmt.Println("You are tall enough!")
+}
+
+else if and else are supported as you might expect:
+
+if height > 6 {
+    fmt.Println("You are super tall!")
+} else if height > 4 {
+    fmt.Println("You are tall enough!")
+} else {
+    fmt.Println("You are not tall enough!")
+}
+
+Unlike other languages, you must put the opening brace on the same line as the condition and not on a new line.
+
+Assignment
+Fix the bug on line 12. If messageLen is less than or equal to the maxMessageLen the program should print "Message sent", else it should print "Message not sent".
+
+Tips
+Here are some of the comparison operators in Go:
+
+== equal to
+!= not equal to
+< less than
+> greater than
+<= less than or equal to
+>= greater than or equal to
+
+
+ASSIGNMENT SOLUTION:
+
+func main() {
+	messageLen := 10
+	maxMessageLen := 20
+	fmt.Println("Trying to send a message of length:", messageLen, "and a max length of:", maxMessageLen)
+
+	// don't touch above this line
+
+	if messageLen <= maxMessageLen {
+		fmt.Println("Message sent")
+	} else {
+		fmt.Println("Message not sent")
+	}
+}
+
+
+Lesson 2:
+The Initial Statement of an If Block
+An if conditional can have an "initial" statement. The variable(s) created in the initial statement are only defined within the scope of the if body.
+
+if INITIAL_STATEMENT; CONDITION {
+}
+
+Why Would I Use This?
+It has two valuable purposes:
+
+It's a bit shorter
+It limits the scope of the initialized variable(s) to the if block
+For example, instead of writing:
+
+length := getLength(email)
+if length < 1 {
+    fmt.Println("Email is invalid")
+}
+
+We can do:
+
+if length := getLength(email); length < 1 {
+    fmt.Println("Email is invalid")
+}
+
+In the example above, length isn't available in the parent scope, which is nice because we don't need it there - we won't accidentally use it elsewhere in the function.
+
+
+
+Lesson 3:
+Switch
+Switch statements are a way to compare a value against multiple options. They are similar to if-else statements but are more concise and readable when the number of options is more than 2.
+
+func getCreator(os string) string {
+    var creator string
+    switch os {
+    case "linux":
+        creator = "Linus Torvalds"
+    case "windows":
+        creator = "Bill Gates"
+    case "mac":
+        creator = "A Steve"
+    default:
+        creator = "Unknown"
+    }
+    return creator
+}
+
+Notice that in Go, the break statement is not required at the end of a case to stop it from falling through to the next case. The break statement is implicit in Go.
+
+If you do want a case to fall through to the next case, you can use the fallthrough keyword.
+
+func getCreator(os string) string {
+    var creator string
+    switch os {
+    case "linux":
+        creator = "Linus Torvalds"
+    case "windows":
+        creator = "Bill Gates"
+
+    // all three of these cases will set creator to "A Steve"
+    case "macOS":
+        fallthrough
+    case "Mac OS X":
+        fallthrough
+    case "mac":
+        creator = "A Steve"
+
+    default:
+        creator = "Unknown"
+    }
+    return creator
+}
+
+The default case does what you'd expect: it's the case that runs if none of the other cases match.
+
+Assignment
+I know we haven't covered function syntax in depth yet, but bear with me.
+
+Fix the bug in the billingCost function. The "basic" plan is set correctly, but we need matches for the "pro" and "enterprise" plans too. If the plan is:
+
+"pro", the cost should be 20.0
+"enterprise", the cost should be 50.0
+
+
+ASSIGNMENT SOLUTION:
+package main
+
+import "fmt"
+
+func billingCost(plan string) float64 {
+	switch plan {
+	case "basic":
+		return 10.0
+	case "pro":
+		return 20.0
+	case "enterprise":
+	   return 50.0
+	default:
+		return 0.0
+	}
+}
+
+// don't touch below this line
+
+func main() {
+	plan := "basic"
+	fmt.Printf("The cost for a %s plan is $%.2f\n", plan, billingCost(plan))
+	plan = "pro"
+	fmt.Printf("The cost for a %s plan is $%.2f\n", plan, billingCost(plan))
+	plan = "enterprise"
+	fmt.Printf("The cost for a %s plan is $%.2f\n", plan, billingCost(plan))
+	plan = "free"
+	fmt.Printf("The cost for a %s plan is $%.2f\n", plan, billingCost(plan))
+	plan = "unknown"
+	fmt.Printf("The cost for a %s plan is $%.2f\n", plan, billingCost(plan))
+}
+
+
+
+
+Lesson 4:
+Calculate Balance
+We need to calculate the total cost for a batch of messages, and update the user’s balance if they have enough money.
+
+Assignment
+Using the given variables, write conditional statements to calculate and update the variables.
+
+Set finalCost to the bulkMessageCost.
+If the user is a premium user, apply the discountRate to the finalCost.
+For example, a discountRate of 0.10 means the discounted price per message would be 90% of the original price.
+If the user has enough money in their accountBalance:
+Deduct finalCost from their accountBalance.
+Print the purchaseSuccessMessage
+If not, just print the insufficientFundMessage.
+
+
+ASSIGNMENT SOLUTION:
+package main
+
+import "fmt"
+
+func main() {
+	var insufficientFundMessage string = "Purchase failed. Insufficient funds."
+	var purchaseSuccessMessage string = "Purchase successful."
+	var accountBalance float64 = 100.0
+	var bulkMessageCost float64 = 75.0
+	var isPremiumUser bool = true
+	var discountRate float64 = 0.10
+	var finalCost float64
+
+	// don't edit above this line
+	finalCost = bulkMessageCost
+	if isPremiumUser {
+		finalCost = finalCost - (finalCost * discountRate)
+	} 
+
+	if accountBalance >= finalCost { 
+		accountBalance = accountBalance - finalCost
+		fmt.Println(purchaseSuccessMessage)
+	}else{
+		fmt.Println(insufficientFundMessage)
+	}// ?
+
+	// don't edit below this line
+
+	fmt.Println("Account balance:", accountBalance)
+}
