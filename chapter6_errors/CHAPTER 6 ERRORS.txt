@@ -117,3 +117,98 @@ Update the code so that the divideError type implements the error interface. Its
 can not divide DIVIDEND by zero
 
 Where DIVIDEND is the actual dividend of the divideError. Use the %v verb to format the dividend as a float.
+
+
+
+
+Lesson4:
+Errors Quiz
+Click to hide video
+
+Go programs express errors with error values. Error-values are any type that implements the simple built-in error interface.
+
+Keep in mind that the way Go handles errors is fairly unique. Most languages treat errors as something special and different. For example, Python raises exception types and JavaScript throws and catches errors. In Go, an error is just another value that we handle like any other value - however we want! There aren't any special keywords for dealing with them.
+
+
+
+
+
+
+
+Lesson 5:
+The Errors Package
+The Go standard library provides an "errors" package that makes it easy to deal with errors.
+
+Read the godoc for the errors.New() function, but here's a simple example:
+
+var err error = errors.New("something went wrong")
+
+Assignment
+Textio's software architects may have overcomplicated the requirements from the last coding assignment... oops. All we needed was a new generic error message that returns the string no dividing by 0 when a user attempts to get us to perform the taboo.
+
+Complete the divide function. Use the errors.New() function to return an error when y == 0 that reads "no dividing by 0".
+
+Hint
+Remember that it's conventional to return the "zero" values of all other return values when you return a non-nil error in Go.
+
+
+
+
+Lesson 6:
+Panic
+As we've seen, the proper way to handle errors in Go is to make use of the error interface. Pass errors up the call stack, treating them as normal values:
+
+func enrichUser(userID string) (User, error) {
+    user, err := getUser(userID)
+    if err != nil {
+        // fmt.Errorf is GOATed: it wraps an error with additional context
+        return User{}, fmt.Errorf("failed to get user: %w", err)
+    }
+    return user, nil
+}
+
+However, there is another way to deal with errors in Go: the panic function. When a function calls panic, the program crashes and prints a stack trace.
+
+As a general rule, do not use panic!
+
+The panic function yeets control out of the current function and up the call stack until it reaches a function that defers a recover. If no function calls recover, the goroutine (often the entire program) crashes.
+
+func enrichUser(userID string) User {
+    user, err := getUser(userID)
+    if err != nil {
+        panic(err)
+    }
+    return user
+}
+
+func main() {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("recovered from panic:", r)
+        }
+    }()
+
+    // this panics, but the defer/recover block catches it
+    // a truly astonishingly bad way to handle errors
+    enrichUser("123")
+}
+
+Sometimes new Go developers look at panic/recover, and think, "This is like try/catch! I like this!" Don't be like them.
+
+I use error values for all "normal" error handling, and if I have a truly unrecoverable error, I use log.Fatal to print a message and exit the program.
+
+
+
+
+
+
+
+Lesson 7:
+User Input
+In Textio, users can set their profile status to communicate their current activity to those that choose to read it... However, there are some restrictions on what these statuses can contain. Your task is to implement a function that validates a user's status update. The status update cannot be empty and must not exceed 140 characters.
+
+Assignment
+Complete the validateStatus function. It should return an error when the status update violates any of the rules:
+
+If the status is empty, return an error that reads status cannot be empty.
+If the status exceeds 140 characters, return an error that says status exceeds 140 characters.
