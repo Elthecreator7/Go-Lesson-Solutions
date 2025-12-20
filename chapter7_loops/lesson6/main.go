@@ -7,3 +7,9 @@ func countConnections(groupSize int) int {
 	}
 	return numOfConn
 }
+
+// Alternative solution with math formula
+// func countConnections(groupSize int) int {
+// 	numOfConn := (groupSize * (groupSize - 1)) / 2
+// 	return numOfConn
+// }
