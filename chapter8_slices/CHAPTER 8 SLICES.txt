@@ -66,3 +66,75 @@ Complete the getMessageWithRetriesForPlan function. It takes a plan variable as 
 If the plan is a pro plan, return all the strings from the messages input in a slice.
 If the plan is a free plan, return the first 2 strings from the messages input in a slice.
 If the plan isn't either of those, return a nil slice and an error that says unsupported plan.
+
+
+
+
+Lesson 3:
+Slices Review
+Click to show video
+Slices wrap arrays to give a more general, powerful, and convenient interface to sequences of data. Except for items with explicit dimensions such as transformation matrices, most array programming in Go is done with slices rather than simple arrays.
+
+Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, any changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer (we'll cover pointers later) to the underlying array. A Read function can therefore accept a slice argument rather than a pointer and a count; the length within the slice sets an upper limit of how much data to read. Here is the signature of the Read() method of the File type in package os:
+
+Referenced from Effective Go
+
+func (f *File) Read(buf []byte) (n int, err error)
+
+
+
+
+
+
+
+NOTE: LESSON 3 TO 5 WERE QUIZZES
+LESSON 6:
+Make
+Most of the time we don't need to think about the underlying array of a slice. We can create a new slice using the make function:
+
+// func make([]T, len, cap) []T
+mySlice := make([]int, 5, 10)
+
+// the capacity argument is usually omitted and defaults to the length
+mySlice := make([]int, 5)
+
+Slices created with make will be filled with the zero value of the type.
+
+If we want to create a slice with a specific set of values, we can use a slice literal:
+
+mySlice := []string{"I", "love", "go"}
+
+Notice the square brackets do not have a 3 in them. If they did, you'd have an array instead of a slice.
+
+Length
+The length of a slice is simply the number of elements it contains. It is accessed using the built-in len() function:
+
+mySlice := []string{"I", "love", "go"}
+fmt.Println(len(mySlice)) // 3
+
+Capacity
+The capacity of a slice is the number of elements in the underlying array, counting from the first element in the slice. It is accessed using the built-in cap() function:
+
+mySlice := []string{"I", "love", "go"}
+fmt.Println(cap(mySlice)) // 3
+
+Generally speaking, unless you're hyper-optimizing the memory usage of your program, you don't need to worry about the capacity of a slice because it will automatically grow as needed.
+
+Indexing
+A programming concept you should already be familiar with is array indexing. You can access or assign a single element of an array or slice by using its index.
+
+mySlice := []string{"I", "love", "go"}
+fmt.Println(mySlice[2]) // go
+
+mySlice[0] = "you"
+fmt.Println(mySlice) // [you love go]
+
+Assignment
+We send a lot of text messages at Textio, and our API is getting slow and unresponsive.
+
+If we know the rough size of a slice before we fill it up, we can make our program faster by creating the slice with that size ahead of time so that the Go runtime doesn't need to continuously allocate new underlying arrays of larger and larger sizes. By setting the length, the slice can still be resized later, but it means we can avoid all the expensive resizing since we know what we'll need.
+
+Complete the getMessageCosts() function. It takes a slice of messages and returns a slice of message costs.
+
+Preallocate a slice for the message costs of the same length as the messages slice.
+Fill the costs slice with costs for each message. The cost in the cost slice should correspond to the message in the messages slice at the same index. The cost of a message is the length of the message multiplied by 0.01.
