@@ -138,3 +138,80 @@ Complete the getMessageCosts() function. It takes a slice of messages and return
 
 Preallocate a slice for the message costs of the same length as the messages slice.
 Fill the costs slice with costs for each message. The cost in the cost slice should correspond to the message in the messages slice at the same index. The cost of a message is the length of the message multiplied by 0.01.
+
+
+
+
+
+LESSON 7:
+Len and Cap Review
+The length of a slice may be changed as long as it still fits within the limits of the underlying array; just assign it to a slice of itself. The capacity of a slice, accessible by the built-in function cap, reports the maximum length the slice may assume. Here is a function to append data to a slice. If the data exceeds the capacity, the slice is reallocated. The resulting slice is returned. The function uses the fact that len and cap are legal when applied to the nil slice, and return 0.
+
+Referenced from Effective Go
+
+func Append(slice, data []byte) []byte {
+    l := len(slice)
+    if l + len(data) > cap(slice) {  // reallocate
+        // Allocate double what's needed, for future growth.
+        newSlice := make([]byte, (l+len(data))*2)
+        // The copy function is predeclared and works for any slice type.
+        copy(newSlice, slice)
+        slice = newSlice
+    }
+    slice = slice[0:l+len(data)]
+    copy(slice[l:], data)
+    return slice
+}
+
+
+
+
+
+
+
+NOTE: LESSON 8 & 9 WERE QUIZZES:
+LESSON 10:
+Variadic
+Many functions, especially those in the standard library, can take an arbitrary number of final arguments. This is accomplished by using the "..." syntax in the function signature.
+
+A variadic function receives the variadic arguments as a slice.
+
+func concat(strs ...string) string {
+    final := ""
+    // strs is just a slice of strings
+    for i := 0; i < len(strs); i++ {
+        final += strs[i]
+    }
+    return final
+}
+
+func main() {
+    final := concat("Hello ", "there ", "friend!")
+    fmt.Println(final)
+    // Output: Hello there friend!
+}
+
+The familiar fmt.Println() and fmt.Sprintf() are variadic! fmt.Println() prints each element with space delimiters and a newline at the end.
+
+func Println(a ...interface{}) (n int, err error)
+
+Spread Operator
+The spread operator allows us to pass a slice into a variadic function. The spread operator consists of three dots following the slice in the function call.
+
+func printStrings(strings ...string) {
+	for i := 0; i < len(strings); i++ {
+		fmt.Println(strings[i])
+	}
+}
+
+func main() {
+    names := []string{"bob", "sue", "alice"}
+    printStrings(names...)
+}
+
+Assignment
+We need to sum up the costs of all individual messages so we can send an end-of-month bill to our customers.
+
+Complete the sum function to return the sum of all inputs.
+
+Take note of how the variadic inputs and the spread operator are used in the test suite.
