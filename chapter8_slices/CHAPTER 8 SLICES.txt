@@ -392,3 +392,25 @@ Assignment
 Your task is to implement a function that filters a slice of messages based on the message type.
 
 Complete the filterMessages function. It should take a slice of Message interfaces and a string indicating the desired type ("text", "media", or "link"). It should return a new slice of Message interfaces containing only messages of the specified type.
+
+
+
+
+
+
+LESSON 18:
+Password Strength
+As part of improving security, Textio wants to enforce a new password policy. A valid password must meet the following criteria:
+
+At least 5 characters long but no more than 12 characters.
+Contains at least one uppercase letter.
+Contains at least one digit.
+A string is really just a read-only slice of bytes. This means that you can use the same techniques you learned in the previous lesson to iterate over the characters of a string.
+
+Assignment
+Implement the isValidPassword function by looping through each character in the password string. Make sure the password is long enough and includes at least one uppercase letter and one digit.
+
+Assume passwords consist of ASCII characters only.
+
+Tip
+Remember that characters in Go strings are really just bytes under the hood. You can compare a character to another character like 'A' or '0' to check if it falls within a certain range.
