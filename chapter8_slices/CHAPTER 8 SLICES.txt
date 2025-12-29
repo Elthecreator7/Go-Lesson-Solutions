@@ -214,4 +214,60 @@ We need to sum up the costs of all individual messages so we can send an end-of-
 
 Complete the sum function to return the sum of all inputs.
 
+
+
+LESSON 11:
+Append
+The built-in append function is used to dynamically add elements to a slice:
+
+func append(slice []Type, elems ...Type) []Type
+
+If the underlying array is not large enough, append() will create a new underlying array and point the returned slice to it.
+
+Notice that append() is variadic, the following are all valid:
+
+slice = append(slice, oneThing)
+slice = append(slice, firstThing, secondThing)
+slice = append(slice, anotherSlice...)
+
+Assignment
+We've been asked to add a feature that extracts costs for a given day.
+
+Complete the getDayCosts() function using the append() function. It accepts a slice of cost structs and a day int, and it returns a float64 slice containing that day's costs. A day may have multiple costs.
+
+If there are no costs for that day, return an empty, non-nil slice.
+
 Take note of how the variadic inputs and the spread operator are used in the test suite.
+
+
+
+
+
+LESSON 12:
+Range
+Go provides syntactic sugar to iterate easily over elements of a slice:
+
+for INDEX, ELEMENT := range SLICE {
+}
+
+The element is a copy of the value at that index.
+
+For example:
+
+fruits := []string{"apple", "banana", "grape"}
+for i, fruit := range fruits {
+    fmt.Println(i, fruit)
+}
+// 0 apple
+// 1 banana
+// 2 grape
+
+Assignment
+We need to be able to quickly detect bad words in the messages our system sends.
+
+Complete the indexOfFirstBadWord function. If it finds any bad words in the message it should return the index of the first bad word in the msg slice. This will help us filter out naughty words from our messaging system. If no bad words are found, return -1 instead.
+
+Use the range keyword.
+
+Tip
+Remember, you can ignore returned values with an underscore _ instead of creating an unused variable.
