@@ -1,0 +1,67 @@
+CHAPTER 9: Maps
+Lesson 1:
+Maps
+Maps are similar to JavaScript objects, Python dictionaries, and Ruby hashes. Maps are a data structure that provides key->value mapping.
+
+The zero value of a map is nil.
+
+We can create a map by using a literal or by using the make() function:
+
+ages := make(map[string]int)
+ages["John"] = 37
+ages["Mary"] = 24
+ages["Mary"] = 21 // overwrites 24
+
+ages = map[string]int{
+  "John": 37,
+  "Mary": 21,
+}
+
+The len() function works on a map, it returns the total number of key/value pairs.
+
+ages = map[string]int{
+  "John": 37,
+  "Mary": 21,
+}
+fmt.Println(len(ages)) // 2
+
+Assignment
+We can speed up our contact-info lookups by using a map!
+
+Key-based map lookup: O(1)
+Slice brute-force search: O(n)
+Complete the getUserMap function. It takes a slice of names and a slice of phone numbers, and returns a map of name -> user structs and an error. A user struct just contains a user's name and phone number. The first element in the names slice pairs with the first phone number, and so on.
+
+If the length of names and phoneNumbers is not equal, return an error with the string "invalid sizes".
+
+
+
+
+
+
+
+LESSON2:
+Mutations
+Insert an Element
+m[key] = elem
+
+Get an Element
+elem = m[key]
+
+Delete an Element
+delete(m, key)
+
+Check If a Key Exists
+elem, ok := m[key]
+
+If key is in m, then ok is true and elem is the value as expected.
+If key is not in the map, then ok is false and elem is the zero value for the map's element type.
+Assignment
+It's important to keep up with privacy regulations and to respect our user's data. We need a function that will delete user records.
+
+Complete the deleteIfNecessary function. The user struct has a scheduledForDeletion field that determines if they are scheduled for deletion or not.
+
+If the user doesn't exist in the map, return the error not found.
+If they exist but aren't scheduled for deletion, return deleted as false with no errors.
+If they exist and are scheduled for deletion, return deleted as true with no errors and delete their record from the map.
+Like slices, maps are also passed by reference into functions. This means that when a map is passed into a function we write, we can make changes to the original — we don't have a copy.
