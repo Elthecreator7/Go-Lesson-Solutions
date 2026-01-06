@@ -208,3 +208,69 @@ Deleting Map Entries
 To delete a map entry, use the built-in delete function, whose arguments are the map and the key to be deleted. It's safe to do this even if the key is already absent from the map.
 
 delete(timeZone, "PDT")  // Now on Standard Time
+
+
+
+
+NOTE: LESSON 7-9 WERE QUIZZES
+
+LESSON 10:
+Nested
+Maps can contain maps, creating a nested structure. For example:
+
+map[string]map[string]int
+map[rune]map[string]int
+map[int]map[string]map[string]int
+
+Assignment
+Because Textio is a glorified customer database, we have a lot of internal logic for sorting and dealing with customer names.
+
+Complete the getNameCounts function. It takes a slice of strings names and returns a nested map. The parent map's keys are all the unique first characters (see runes) of the names, the nested maps keys are all the names themselves, and the value is the count of each name.
+
+For example:
+
+billy
+billy
+bob
+joe
+
+Creates the following nested map:
+
+b: {
+    billy: 2,
+    bob: 1
+},
+j: {
+    joe: 1
+}
+
+Tips
+The test suite is not printing the map you're returning directly, but instead checking a few specific keys.
+You can convert a string into a slice of runes as follows:
+runes := []rune(word)
+
+
+
+
+
+LESSON 11:
+Distinct Words
+Complete the countDistinctWords function using a map. It should take a slice of strings and return the total count of distinct words across all the strings. Assume words are separated by spaces. Casing should not matter. (e.g., "Hello" and "hello" should be considered the same word).
+
+For example:
+
+messages := []string{"Hello world", "hello there", "General Kenobi"}
+count := countDistinctWords(messages)
+
+count should be 5 as the distinct words are "hello", "world", "there", "general" and "kenobi" irrespective of casing.
+
+Tips
+Go's strings package can be very helpful here. Specifically the Fields method and the ToLower method.
+
+Since all that matters is counting distinct words, we don't care about the value of each key in the map. You can use struct{}{} as the value of your map key. This empty struct uses no memory. For example, both map[string]bool and map[string]struct{} can track unique words, but they use different amounts of memory:
+
+distinctWordsBool := make(map[string]bool)
+distinctWordsStruct := make(map[string]struct{})
+
+distinctWordsBool["hello"] = true         // Uses 1 byte for the bool value
+distinctWordsStruct["hello"] = struct{}{} // Uses 0 bytes for the empty struct
