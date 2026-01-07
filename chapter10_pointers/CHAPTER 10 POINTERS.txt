@@ -131,3 +131,19 @@ It should look at the Success field of the Message struct and, based on that, in
 
 
 
+NOTE: LESSON 4 & 5 WERE QUIZZES
+LESSON 6:
+Nil Pointers
+Pointers can be very dangerous.
+
+If a pointer points to nothing (the zero value of the pointer type is nil) then dereferencing it will cause a runtime error (a panic) that crashes the program. Generally speaking, whenever you're dealing with pointers you should check if it's nil before trying to dereference it.
+
+Assignment
+Let's make our profanity checker safe. Update the removeProfanity function. If message is nil, return early to avoid a panic. After all, there are no bad words to remove.
+
+
+
+
+
+
+
