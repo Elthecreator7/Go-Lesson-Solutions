@@ -220,3 +220,47 @@ Assignment
 Fix the bug in the code so that setMessage sets the message field of the given email struct, and the new value persists outside the scope of the setMessage method.
 
 
+
+LESSON 9:
+Pointer Performance
+Occasionally, new Go developers hear "pointers don't pass copies" and take that to a logical extreme, concluding:
+
+Pointers are always faster because copying is slow. I'll always use pointers!
+
+No. Bad. Stop.
+
+Here are my rules of thumb:
+
+First, worry about writing clear, correct, maintainable code.
+If you have a performance problem, fix it.
+Before even thinking about using pointers to optimize your code, use pointers when you need a shared reference to a value; otherwise, just use values.
+
+If you do have a performance problem, consider:
+
+Stack vs. Heap
+Copying
+Interestingly, local non-pointer variables are generally faster to pass around than pointers because they're stored on the stack, which is faster to access than the heap. Even though copying is involved, the stack is so fast that it's no big deal.
+
+Once the value becomes large enough that copying is the greater problem, it can be worth using a pointer to avoid copying. That value will probably go to the heap, so the gain from avoiding copying needs to be greater than the loss from moving to the heap.
+
+One of the reasons Go programs tend to use less memory than Java and C# programs is that Go tends to allocate more on the stack.
+
+If you're curious to dig deeper, I ran a benchmark and wrote about it.
+
+
+
+
+
+NOTE: LESSON 9 & 10 WAS A QUIZ
+LESSON 11:
+Update Balance
+Textio needs a new way to update user's account balance.
+
+Assignment
+Implement the updateBalance function. It should take a customer pointer and a transaction, and return an error. Depending on the transactionType, it should either add or subtract the amount from the customer's balance. If the customer does not have enough money, it should return the error insufficient funds. If the transactionType isn't a withdrawal or deposit, it should return the error unknown transaction type. Otherwise, it should process the transaction and return nil.
+
+alice := customer{id: 1, balance: 100.0}
+deposit := transaction{customerID: 1, amount: 50, transactionType: transactionDeposit}
+
+updateBalance(&alice, deposit)
+// id: 1 balance: 150
