@@ -1,0 +1,73 @@
+CHAPTER 12: CHANNELS
+
+LESSON 1:
+Concurrency
+Click to show video
+What Is Concurrency?
+Concurrency is the ability to perform multiple tasks at the same time. Typically, our code is executed one line at a time, one after the other. This is called sequential execution or synchronous execution.
+
+
+
+If the computer we're running our code on has multiple cores, we can even execute multiple tasks at exactly the same time. If we're running on a single core, a single core executes code at almost the same time by switching between tasks very quickly. Either way, the code we write looks the same in Go and takes advantage of whatever resources are available.
+
+How Does Concurrency Work in Go?
+Go was designed to be concurrent, which is a trait fairly unique to Go. It excels at performing many tasks simultaneously safely using a simple syntax.
+
+There isn't a popular programming language in existence where spawning concurrent execution is quite as elegant, at least in my opinion.
+
+Concurrency is as simple as using the go keyword when calling a function:
+
+go doSomething()
+
+In the example above, doSomething() will be executed concurrently with the rest of the code in the function. The go keyword is used to spawn a new goroutine.
+
+Assignment
+At Textio we send a lot of network requests. Each email we send must go out over the internet. To serve our millions of customers, we need a single Go program to be capable of sending thousands of emails at once.
+
+Edit the sendEmail() function to execute its anonymous function concurrently so that the "received" message prints after the "sent" message.
+
+
+
+
+
+
+
+LESSON 2:
+Channels
+Channels are a typed, thread-safe queue. Channels allow different goroutines to communicate with each other.
+
+Create a Channel
+Like maps and slices, channels must be created before use. They also use the same make keyword:
+
+ch := make(chan int)
+
+Send Data to a Channel
+ch <- 69
+
+The <- operator is called the channel operator. Data flows in the direction of the arrow. This operation will block until another goroutine is ready to receive the value.
+
+Receive Data from a Channel
+v := <-ch
+
+This reads and removes a value from the channel and saves it into the variable v. This operation will block until there is a value in the channel to be read.
+
+Reference Type
+Like maps and slices, channels are reference types, meaning they are passed by reference by default.
+
+func send(ch chan int) {
+    ch <- 99
+}
+
+func main() {
+    ch := make(chan int)
+    go send(ch)
+    fmt.Println(<-ch) // 99
+}
+
+Blocking and Deadlocks
+A deadlock is when a group of goroutines are all blocking so none of them can continue. This is a common bug that you need to watch out for in concurrent programming.
+
+Assignment
+Run the program. You'll see that it deadlocks and never exits. The sendIsOld function is trying to send on a channel, but no other goroutines are running that can accept the value from the channel.
+
+Fix the deadlock by spawning a goroutine to send the "is old" values.
