@@ -191,3 +191,66 @@ Use an infinite for loop to read from the channel:
 If the channel is closed, break out of the loop
 Otherwise, keep a running total of the number of reports sent
 Return the total number of reports sent
+
+
+
+
+
+
+
+
+
+
+LESSON 6:
+Range
+Similar to slices and maps, channels can be ranged over.
+
+for item := range ch {
+    // item is the next value received from the channel
+}
+
+This example will receive values over the channel (blocking at each iteration if nothing new is there) and will exit only when the channel is closed.
+
+Assignment
+It's that time again, Textio is hiring and we've been assigned to do the interview. The Fibonacci sequence is Textio's interview problem of choice. We've been tasked with building a small toy program we can use in the interview.
+
+Complete the concurrentFib function. It should:
+
+Create a new channel of ints
+Call fibonacci concurrently
+Use a range loop to read from the channel and append the values to a slice
+Return the slice
+
+
+
+
+
+
+
+
+
+LESSON 7:
+Select
+Sometimes we have a single goroutine listening to multiple channels and want to process data in the order it comes through each channel.
+
+A select statement is used to listen to multiple channels at the same time. It is similar to a switch statement but for channels.
+
+select {
+case i, ok := <-chInts:
+	if ok {
+		fmt.Println(i)
+	}
+case s, ok := <-chStrings:
+	if ok {
+		fmt.Println(s)
+	}
+}
+
+The first channel with a value ready to be received will fire and its body will execute. If multiple channels are ready at the same time one is chosen randomly. The ok variable in the example above refers to whether or not the channel has been closed by the sender yet.
+
+Assignment
+Complete the logMessages function.
+
+Use an infinite for loop and a select statement to log the emails and sms messages as they come in order across the two channels. Add a condition to return from the function when one of the two channels closes, whichever is first.
+
+Use the logSms and logEmail functions to log the messages.
