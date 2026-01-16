@@ -1,0 +1,111 @@
+CHAPTER 14: GENERICS
+
+LESSON 1:
+Generics in Go
+As we've mentioned, Go does not support classes. For a long time, that meant that Go code couldn't easily be reused in many cases. For example, imagine some code that splits a slice into 2 equal parts. The code that splits the slice doesn't care about the types of values stored in the slice. Before generics, we needed to write the same code for each type, which is a very un-DRY thing to do.
+
+func splitIntSlice(s []int) ([]int, []int) {
+    mid := len(s)/2
+    return s[:mid], s[mid:]
+}
+
+func splitStringSlice(s []string) ([]string, []string) {
+    mid := len(s)/2
+    return s[:mid], s[mid:]
+}
+
+In Go 1.18 however, support for generics was released, effectively solving this problem!
+
+Type Parameters
+Put simply, generics allow us to use variables to refer to specific types. This is an amazing feature because it allows us to write abstract functions that drastically reduce code duplication.
+
+func splitAnySlice[T any](s []T) ([]T, []T) {
+    mid := len(s)/2
+    return s[:mid], s[mid:]
+}
+
+In the example above, T is the name of the type parameter for the splitAnySlice function, and we've said that it must match the any constraint, which means it can be anything. This makes sense because the body of the function doesn't care about the types of things stored in the slice.
+
+firstInts, secondInts := splitAnySlice([]int{0, 1, 2, 3})
+fmt.Println(firstInts, secondInts)
+
+Assignment
+At Textio we store all the emails for a campaign in memory as a slice. We store payments for a single user in the same way.
+
+Complete the getLast() function. It should be a generic function that returns the last element from a slice, no matter the types stored in the slice. If the slice is empty, it should return the zero value of the type.
+
+Tip: Zero Value of a Type
+Creating a variable that's the zero value of a type is easy:
+
+var myZeroInt int
+
+It's the same with generics, we just have a variable that represents the type:
+
+var myZero T
+
+
+
+
+
+
+
+
+LESSON 2:
+Why Generics?
+Generics Reduce Repetitive Code
+You should care about generics because they mean you don't have to write as much code! It can be frustrating to write the same logic over and over again, just because you have some underlying data types that are slightly different.
+
+Generics Are Used More Often in Libraries and Packages
+Generics give Go developers an elegant way to write amazing utility packages. While you will see and use generics in application code, I think it will be much more common to see generics used in libraries and packages. Libraries and packages contain importable code intended to be used in many applications, so it makes sense to write them in a more abstract way. Generics are often the way to do just that!
+
+Why Did It Take So Long to Get Generics?
+Go places an emphasis on simplicity. In other words, Go has purposefully left out many features to provide its best feature: being simple and easy to work with.
+
+According to historical data from Go surveys, Go’s lack of generics has always been listed as one of the top three biggest issues with the language. At a certain point, the drawbacks associated with the lack of a feature like generics justify adding complexity to the language.
+
+
+
+
+
+
+
+NOTE LESSON 3 & 4 WERE QUIZZES
+LESSON 5:
+Constraints
+Sometimes you need your generic function to know something about the types it operates on. The example we used in the first exercise didn't need to know anything about the types in the slice, so we used the built-in any constraint:
+
+func splitAnySlice[T any](s []T) ([]T, []T) {
+    mid := len(s)/2
+    return s[:mid], s[mid:]
+}
+
+Constraints are just interfaces that allow us to write generics that only operate within the constraints of a given interface type. In the example above, the any constraint is the same as the empty interface because it means the type in question can be anything.
+
+Creating a Custom Constraint
+Let's take a look at the example of a concat function. It takes a slice of values and concatenates the values into a string. This should work with any type that can represent itself as a string, even if it's not a string under the hood. For example, a user struct can have a .String() that returns a string with the user's name and age.
+
+type stringer interface {
+    String() string
+}
+
+func concat[T stringer](vals []T) string {
+    result := ""
+    for _, val := range vals {
+        // this is where the .String() method
+        // is used. That's why we need a more specific
+        // constraint instead of the any constraint
+        result += val.String()
+    }
+    return result
+}
+
+Assignment
+We have different kinds of "line items" that we charge our customer's credit cards for. Line items can be things like "subscriptions" or "one-time payments" for email usage.
+
+Complete the chargeForLineItem function.
+
+Check if the user has a balance with enough funds to be able to pay for the cost of the newItem.
+If they don't, then return an "insufficient funds" error and zero values for the other return values.
+If they do have enough funds:
+Add the line item to the user's history by appending the newItem to the slice of oldItems. This new slice is your first return value.
+Calculate the user's new balance by subtracting the cost of the new item from their balance. This is your second return value.
